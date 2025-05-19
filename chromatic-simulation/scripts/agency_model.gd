@@ -10,6 +10,7 @@ enum AgencyColor {
 	PINK
 }
 
+var agencyColor: AgencyColor
 var chromatics: Array[ChromaticModel]
 
 var agencyScore: int

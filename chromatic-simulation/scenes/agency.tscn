@@ -1,8 +1,10 @@
-[gd_scene load_steps=2 format=3 uid="uid://bmm2sdtsemxih"]
+[gd_scene load_steps=3 format=3 uid="uid://bmm2sdtsemxih"]
 
+[ext_resource type="Script" uid="uid://c8i3c68wqahgi" path="res://scripts/agency.gd" id="1_6wdx7"]
 [ext_resource type="Script" uid="uid://pkcxtqy4rru5" path="res://scripts/agency_model.gd" id="1_ucg4y"]
 
 [node name="Agency" type="Node2D" groups=["Agencies"]]
+script = ExtResource("1_6wdx7")
 
 [node name="AgencyModel" type="Node" parent="."]
 unique_name_in_owner = true
