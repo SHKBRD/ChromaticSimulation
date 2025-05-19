@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://co41i7wu0asr7"]
+
+[ext_resource type="Script" uid="uid://cjrdxmk0hpyk6" path="res://scripts/organization_model.gd" id="1_l11bg"]
+[ext_resource type="Script" uid="uid://bd1do82bdekxd" path="res://scripts/organization_scene.gd" id="1_xg3sh"]
+
+[node name="Organization" type="Node2D"]
+script = ExtResource("1_xg3sh")
+
+[node name="OrganizationModel" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("1_l11bg")
+
+[node name="AgencyScenes" type="Node2D" parent="."]
+unique_name_in_owner = true
