@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://byvg44ag1k5v7"]
+
+[ext_resource type="Script" uid="uid://cemrnfbkw2brv" path="res://scripts/mission_model.gd" id="1_01qru"]
+
+[node name="Mission" type="Node"]
+
+[node name="MissionModel" type="Node" parent="."]
+unique_name_in_owner = true
+script = ExtResource("1_01qru")

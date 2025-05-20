@@ -12,3 +12,6 @@ script = ExtResource("1_l11bg")
 
 [node name="AgencyScenes" type="Node2D" parent="."]
 unique_name_in_owner = true
+
+[node name="Missions" type="Node" parent="."]
+unique_name_in_owner = true

@@ -15,6 +15,10 @@ run/main_scene="uid://bv42ofvy2bw1"
 config/features=PackedStringArray("4.4", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+SimulationTypes="*res://scripts/global/simluation_types.gd"
+
 [global_group]
 
 Chromatics=""

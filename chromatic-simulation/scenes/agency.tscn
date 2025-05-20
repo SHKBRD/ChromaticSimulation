@@ -9,3 +9,6 @@ script = ExtResource("1_6wdx7")
 [node name="AgencyModel" type="Node" parent="."]
 unique_name_in_owner = true
 script = ExtResource("1_ucg4y")
+
+[node name="ChromaticScenes" type="Node2D" parent="."]
+unique_name_in_owner = true
