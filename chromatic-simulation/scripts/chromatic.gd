@@ -1,8 +1,12 @@
 extends Node2D
 class_name Chromatic
 
+static var existingChromatics: int = 0
+
+var model: ChromaticModel
+
 func _ready() -> void:
-	pass
+	model = %ChromaticModel
 
 func _process(delta: float) -> void:
 	pass
