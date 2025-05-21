@@ -2,6 +2,7 @@ extends Node
 class_name Mission
 
 var missionRemainingDays: int
+var assignedChromatics: Array[ChromaticModel]
 
 func _ready() -> void:
 	initialize_mission()

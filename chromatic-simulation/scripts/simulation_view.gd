@@ -41,15 +41,22 @@ func advance_all_resting_chromatic_status() -> void:
 
 func give_chromatic_mission(chromatic: Chromatic) -> void:
 	if %Organization.model.missions.size() == 0:
-		%Organization.model.add_mission()
+		%Organization.model.create_mission()
 		%Organization.model.missions[0].assign_chromatic(chromatic)
 		return
 	
 	var missionList: Array[Mission] = (%Organization.get_node("Missions").get_children() as Array[Mission])
-	if 
+	var sizeSplitMissions: Array = mission_list_split(missionList, true)
+	
 
-func mission_list_split() -> Array:
-	var 
+func mission_list_split(missionList: Array[Mission], shuffled: bool = false) -> Array:
+	var sizeSplitMissions: Array = [[], [], [], [], [], []]
+	for mission: Mission in missionList:
+		sizeSplitMissions[mission.assignedChromatics.size()-1].append(mission)
+	if shuffled:
+		for sizeArrInd: int in sizeSplitMissions.size():
+			sizeSplitMissions[sizeArrInd].shuffle()
+	return sizeSplitMissions
 
 func _on_start_button_pressed() -> void:
 	start_simulation(SimulationTypes.SimulationType.DEFAULT)
