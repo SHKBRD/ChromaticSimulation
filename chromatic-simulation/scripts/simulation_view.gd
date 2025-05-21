@@ -26,13 +26,29 @@ func simulation_loop() -> void:
 
 func simulation_organization_day() -> void:
 	advance_all_resting_chromatic_status()
+	advance_all_mission_status()
 	
 	while %Organization.model.hour < 24:
 		simulation_organization_hour()
 		%Organization.model.hour += 1
 
 func simulation_organization_hour() -> void:
-	pass
+	update_resting_chromatic_willingness()
+
+func update_resting_chromatic_willingness() -> void:
+	var processChromatics: Array = get_tree().get_nodes_in_group("ActiveChromatics")
+	processChromatics.shuffle()
+	for chromatic: Chromatic in processChromatics:
+		if chromatic.model.currentMission == null:
+			chromatic.model.increase_mission_willingness()
+
+func advance_all_mission_status() -> void:
+	var missions: Array = %Organization.model.missions
+	for mission: Mission in missions:
+		if mission.status == Mission.MissionStatus.UPCOMING:
+			mission.remainingDays -= 1
+			if mission.remainingDays == -1:
+				mission.status = Mission.MissionStatus.ACTIVE
 
 func advance_all_resting_chromatic_status() -> void:
 	var processChromatics: Array = get_tree().get_nodes_in_group("ActiveChromatics")
@@ -69,7 +85,7 @@ func mission_list_split(missionList: Array, ignoredColor: AgencyModel.AgencyColo
 	var sizeSplitMissions: Array[Array] = [[], [], [], [], []]
 	for mission: Mission in missionList:
 		# Filter out full missions
-		if mission.assignedChromatics.size() != 6 and not mission.has_chromatic_of_agency(ignoredColor):
+		if mission.status == Mission.MissionStatus.UPCOMING and mission.assignedChromatics.size() != 6 and not mission.has_chromatic_of_agency(ignoredColor):
 			sizeSplitMissions[mission.assignedChromatics.size()-1].append(mission)
 	
 	if clearEmpty:

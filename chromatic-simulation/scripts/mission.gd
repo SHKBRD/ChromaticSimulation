@@ -7,8 +7,8 @@ enum MissionStatus {
 	DONE
 }
 
-var missionRemainingDays: int
-var missionStatus: MissionStatus
+var remainingDays: int
+var status: MissionStatus
 var assignedChromatics: Array[ChromaticModel]
 
 func _ready() -> void:
@@ -18,7 +18,8 @@ func initialize_mission() -> void:
 	var config: Dictionary = Simulation.simulationConfig
 	var possibleApplyLengthRange: Array = Simulation.simulationConfig["missionSelectionTimeRange"]
 	var randomPickDays: int = RandomNumberGenerator.new().randi_range(possibleApplyLengthRange[0], possibleApplyLengthRange[1])
-	missionRemainingDays = randomPickDays
+	remainingDays = randomPickDays
+	status = MissionStatus.UPCOMING
 
 func has_chromatic_of_agency(color: AgencyModel.AgencyColor) -> bool:
 	for chromatic: ChromaticModel in assignedChromatics:
