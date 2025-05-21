@@ -12,5 +12,6 @@ enum AgencyColor {
 
 var agencyColor: AgencyColor
 var chromatics: Array[ChromaticModel]
+var missionAvailableChromatics: Array[ChromaticModel]
 
 var agencyScore: int

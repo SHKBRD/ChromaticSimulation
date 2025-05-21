@@ -21,8 +21,9 @@ SimulationTypes="*res://scripts/global/simluation_types.gd"
 
 [global_group]
 
-Chromatics=""
 Agencies=""
+ActiveChromatics=""
+EliminatedChromatics=""
 
 [rendering]
 

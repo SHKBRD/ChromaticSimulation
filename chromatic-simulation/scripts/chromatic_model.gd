@@ -9,6 +9,7 @@ var classRank: int
 var classCredits: float
 var eliminated: bool
 
+var currentMission: Mission
 var missionWillingness: float
 
 

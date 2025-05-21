@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://bhqabhrn8kxpk" path="res://scripts/chromatic.gd" id="1_4gauo"]
 [ext_resource type="Script" uid="uid://cdojimgtvjwf0" path="res://scripts/chromatic_model.gd" id="1_71rqf"]
 
-[node name="Chromatic" type="Node2D" groups=["Chromatics"]]
+[node name="Chromatic" type="Node2D" groups=["ActiveChromatics"]]
 script = ExtResource("1_4gauo")
 
 [node name="ChromaticModel" type="Node" parent="."]

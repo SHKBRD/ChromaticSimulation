@@ -12,3 +12,6 @@ script = ExtResource("1_ucg4y")
 
 [node name="ChromaticScenes" type="Node2D" parent="."]
 unique_name_in_owner = true
+
+[node name="EliminatedChromaticScenes" type="Node2D" parent="."]
+unique_name_in_owner = true
