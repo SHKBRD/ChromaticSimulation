@@ -33,9 +33,23 @@ func advance_all_resting_chromatic_status() -> void:
 	processChromatics.shuffle()
 	for chromatic: Chromatic in processChromatics:
 		if chromatic.model.currentMission != null:
-			var decision: bool = chromatic.decide_to_go_on_mission()
+			var decision: bool = chromatic.model.decide_to_go_on_mission()
 			if decision:
 				give_chromatic_mission(chromatic)
-				
+			else:
+				chromatic.model.update_mission_willingness()
+
+func give_chromatic_mission(chromatic: Chromatic) -> void:
+	if %Organization.model.missions.size() == 0:
+		%Organization.model.add_mission()
+		%Organization.model.missions[0].assign_chromatic(chromatic)
+		return
+	
+	var missionList: Array[Mission] = (%Organization.get_node("Missions").get_children() as Array[Mission])
+	if 
+
+func mission_list_split() -> Array:
+	var 
+
 func _on_start_button_pressed() -> void:
 	start_simulation(SimulationTypes.SimulationType.DEFAULT)
