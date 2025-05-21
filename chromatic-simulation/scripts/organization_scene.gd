@@ -19,5 +19,5 @@ func initialize_organization(chromaticAgencyCount: int) -> void:
 
 func create_mission() -> void:
 	var newMission: Mission = missionScene.instantiate()
-	newMission.initialize_mission()
 	%Missions.add_child(newMission)
+	model.missions.append(newMission)

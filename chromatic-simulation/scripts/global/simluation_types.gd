@@ -23,7 +23,7 @@ var defaultSimulation: Dictionary = {
 	# Chromatic recruitment rate per agency, decimal is kept across tracking calculations
 	"chromaticRecruitmentRate" : 0.5,
 	# Possible mission selection time range, days
-	"missionSelectionTimeRange" : range(7, 14)
+	"missionSelectionTimeRange" : [7, 14]
 }
 
 var firstToTenSimulation: Dictionary = {
