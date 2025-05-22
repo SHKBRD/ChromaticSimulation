@@ -28,7 +28,7 @@ func simulation_loop() -> void:
 		%Organization.model.day += 1
 
 func simulation_organization_day() -> void:
-	add_new_chromatics()
+	%Organization.model.add_new_chromatics()
 	advance_all_resting_chromatic_status()
 	advance_upcoming_mission_status()
 	
