@@ -3,6 +3,9 @@ class_name Simulation
 
 static var simulationConfig: Dictionary
 
+static func roll_chance(min: float, max: float, thresh: float) -> bool:
+	var rollNum: float = RandomNumberGenerator.new().randf_range(min, max)
+	return rollNum <= thresh
 
 func _ready() -> void:
 	pass
@@ -29,12 +32,12 @@ func simulation_organization_day() -> void:
 	advance_upcoming_mission_status()
 	
 	while %Organization.model.hour < 24:
-		simulation_organization_hour()
+		simulation_organization_hour(%Organization.model.hour)
 		%Organization.model.hour += 1
 
-func simulation_organization_hour() -> void:
+func simulation_organization_hour(hour: int) -> void:
 	update_resting_chromatic_willingness()
-	advance_active_mission_status()
+	advance_active_mission_status(hour)
 
 func update_resting_chromatic_willingness() -> void:
 	var processChromatics: Array = get_tree().get_nodes_in_group("ActiveChromatics")
@@ -44,12 +47,52 @@ func update_resting_chromatic_willingness() -> void:
 			chromatic.model.increase_mission_willingness()
 
 func advance_upcoming_mission_status() -> void:
-	var missions: Array = %Organization.model.upcomingMissions
+	var missions: Array = %Organization.model.upcomingMissions.duplicate()
 	for mission: Mission in missions:
 		if mission.status == Mission.MissionStatus.UPCOMING:
 			mission.remainingDays -= 1
 			if mission.remainingDays == -1:
-				mission.status = Mission.MissionStatus.ACTIVE
+				activate_mission(mission)
+
+func activate_mission(mission: Mission) -> void:
+	mission.status = Mission.MissionStatus.ACTIVE
+	%Organization.model.upcomingMissions.erase(mission)
+	%Organization.model.activeMissions
+
+func advance_active_mission_status(hour: int) -> void:
+	var missions: Array = %Organization.model.activeMissions.duplicate
+	for mission: Mission in missions:
+		process_mission_encounters(mission, hour)
+
+func process_mission_encounters(mission: Mission, hour: int) -> void:
+	for chromatic: ChromaticModel in mission.assignedChromatics:
+		if chromatic.eliminated:
+			continue
+		for focusChromatic: ChromaticModel in mission.assignedChromatics:
+			if focusChromatic != chromatic and not focusChromatic.eliminated:
+				var decision: bool = decide_to_engage(chromatic, focusChromatic, mission, hour)
+				if decision:
+					start_encounter(mission, chromatic, focusChromatic)
+
+func decide_to_engage(chromatic1: ChromaticModel, chromatic2: ChromaticModel, mission: Mission, hour: int) -> bool:
+	
+	var engagementConsideration: float = 0.25
+	var hourConsideration: float = 1-(abs((hour-16)/24.0))
+	engagementConsideration *= hourConsideration
+	var classDifferenceConsideration: float = class_difference_consideration(engagementConsideration, chromatic1.classRank, chromatic2.classRank)
+	engagementConsideration *= classDifferenceConsideration
+	
+	var decision: bool = roll_chance(0, 1, engagementConsideration)
+	return decision
+	
+func class_difference_consideration(baseConsideration: float, class1: int, class2: int) -> float:
+	if class1 == class2: return 1.0
+	var classDifference: int = abs(class1 - class2)
+	return pow(0.75, classDifference)
+
+
+func start_encounter(mission: Mission, chromatic1: ChromaticModel, chromatic2: ChromaticModel) -> void:
+	pass
 
 func advance_all_resting_chromatic_status() -> void:
 	var processChromatics: Array = get_tree().get_nodes_in_group("ActiveChromatics")
