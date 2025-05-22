@@ -3,7 +3,9 @@ class_name OrganizationModel
 
 
 var agencies: Array[AgencyModel] = []
-var missions: Array[Mission] = []
+var upcomingMissions: Array[Mission] = []
+var activeMissions: Array[Mission] = []
+var completedMissions: Array[Mission] = []
 
 var day: int
 var hour: int
