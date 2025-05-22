@@ -9,3 +9,5 @@ var completedMissions: Array[Mission] = []
 
 var day: int
 var hour: int
+
+var chromaticEnrollProgress: float = 0.0

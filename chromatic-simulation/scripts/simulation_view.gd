@@ -28,12 +28,15 @@ func simulation_loop() -> void:
 		%Organization.model.day += 1
 
 func simulation_organization_day() -> void:
+	add_new_chromatics()
 	advance_all_resting_chromatic_status()
 	advance_upcoming_mission_status()
 	
 	while %Organization.model.hour < 24:
 		simulation_organization_hour(%Organization.model.hour)
 		%Organization.model.hour += 1
+	
+	advance_active_missions()
 
 func simulation_organization_hour(hour: int) -> void:
 	update_resting_chromatic_willingness()
@@ -57,7 +60,7 @@ func advance_upcoming_mission_status() -> void:
 func activate_mission(mission: Mission) -> void:
 	mission.status = Mission.MissionStatus.ACTIVE
 	%Organization.model.upcomingMissions.erase(mission)
-	%Organization.model.activeMissions
+	%Organization.model.activeMissions.append(mission)
 
 func advance_active_mission_status(hour: int) -> void:
 	var missions: Array = %Organization.model.activeMissions.duplicate
@@ -75,7 +78,6 @@ func process_mission_encounters(mission: Mission, hour: int) -> void:
 					start_encounter(mission, chromatic, focusChromatic)
 
 func decide_to_engage(chromatic1: ChromaticModel, chromatic2: ChromaticModel, mission: Mission, hour: int) -> bool:
-	
 	var engagementConsideration: float = 0.25
 	var hourConsideration: float = 1-(abs((hour-16)/24.0))
 	engagementConsideration *= hourConsideration
@@ -92,7 +94,38 @@ func class_difference_consideration(baseConsideration: float, class1: int, class
 
 
 func start_encounter(mission: Mission, chromatic1: ChromaticModel, chromatic2: ChromaticModel) -> void:
-	pass
+	var chromatic1WinResult: bool = roll_chance(0, 1, class_difference_win_chance(chromatic1.classRank, chromatic2.classRank))
+	var chromatic1PerfectResult: bool = roll_chance(0, 1, class_difference_win_chance(chromatic1.classRank, chromatic2.classRank))
+	var creditsEarned: float
+	if chromatic1WinResult:
+		creditsEarned = pow(2, chromatic1.classRank-chromatic2.classRank)
+		if chromatic1PerfectResult:
+			creditsEarned *= 2
+		chromatic1.award_credits(creditsEarned)
+		chromatic2.eliminate()
+	else:
+		creditsEarned = pow(2, chromatic2.classRank-chromatic1.classRank)
+		if not chromatic1PerfectResult:
+			creditsEarned *= 2
+		chromatic2.award_credits(creditsEarned)
+		chromatic1.eliminate()
+	
+	
+func class_difference_win_chance(initiatingClass: int, challengedClass: int) -> float:
+	var classDifference: int = abs(initiatingClass - challengedClass)
+	var biggerClass: int = max(initiatingClass, challengedClass)
+	var differenceFactor: float = pow(biggerClass, classDifference/1.5)
+	var winningChance: float = 1 - ( 1 / ( 2*differenceFactor ) )
+	if initiatingClass < challengedClass:
+		winningChance = 1-winningChance
+	return winningChance
+
+func advance_active_missions() -> void:
+	var missions: Array[Mission] = %Organization.model.activeMissions.duplicate
+	for mission: Mission in missions:
+		for chromatic: ChromaticModel in mission.assignedChromatics:
+			chromatic.give_rest()
+			
 
 func advance_all_resting_chromatic_status() -> void:
 	var processChromatics: Array = get_tree().get_nodes_in_group("ActiveChromatics")

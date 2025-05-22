@@ -30,3 +30,17 @@ func decide_to_go_on_mission() -> bool:
 
 func increase_mission_willingness() -> void:
 	missionWillingness += Simulation.simulationConfig.hourlyMissionWillingnessRestGrowth
+
+func award_credits(credits: float) -> void:
+	while classCredits >= classRank:
+		classCredits -= classRank
+		classRank += 1
+
+func eliminate() -> void:
+	remove_from_group("ActiveChromatics")
+	add_to_group("EliminatedChromatics")
+	eliminated = true
+
+func give_rest() -> void:
+	currentMission = null
+	missionWillingness = Simulation.simulationConfig.startingMissionWillingness
