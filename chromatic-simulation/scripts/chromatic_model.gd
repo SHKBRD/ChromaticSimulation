@@ -37,10 +37,17 @@ func award_credits(credits: float) -> void:
 		classRank += 1
 
 func eliminate() -> void:
-	remove_from_group("ActiveChromatics")
-	add_to_group("EliminatedChromatics")
+	#var preRemove: int = get_tree().get_nodes_in_group("ActiveChromatics").size()
+	get_parent().remove_from_group("ActiveChromatics")
+	get_parent().add_to_group("EliminatedChromatics")
+	#var postRemove: int = get_tree().get_nodes_in_group("ActiveChromatics").size()
+	
+	
+	
+	var agency: Agency = get_parent().get_parent().get_parent()
+	agency.agencyModel.chromatics.erase(self)
 	eliminated = true
 
 func give_rest() -> void:
 	currentMission = null
-	missionWillingness = Simulation.simulationConfig.startingMissionWillingness
+	missionWillingness = Simulation.simulationConfig.resetMissionWillingness

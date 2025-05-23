@@ -7,12 +7,14 @@ var agencyModel: AgencyModel
 
 func initialize_agency(color: AgencyModel.AgencyColor, amount: int) -> void:
 	for chromaticInd: int in amount:
-		var newChromatic: Chromatic = chromaticScene.instantiate()
-		%ChromaticScenes.add_child(newChromatic)
-		newChromatic.initialize_chromatic(color)
-		%AgencyModel.chromatics.append(newChromatic.get_node("ChromaticModel"))
+		add_chromatic(color)
 	
-	pass
+
+func add_chromatic(color: AgencyModel.AgencyColor) -> void:
+	var newChromatic: Chromatic = chromaticScene.instantiate()
+	%ChromaticScenes.add_child(newChromatic)
+	newChromatic.initialize_chromatic(color)
+	%AgencyModel.chromatics.append(newChromatic.get_node("ChromaticModel"))
 
 func _ready() -> void:
 	agencyModel = %AgencyModel

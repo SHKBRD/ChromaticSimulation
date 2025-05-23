@@ -17,18 +17,26 @@ func start_simulation(simType: SimulationTypes.SimulationType):
 	simulation_results()
 
 func simulation_results() -> void:
-	for mission: Mission in %Organization.get_node("Missions").get_children():
-		print(mission.assignedChromatics.size())
+	#for mission: Mission in %Organization.get_node("Missions").get_children():
+		#print(mission.assignedChromatics.size())
+	pass
+
+func day_prints() -> void:
+	print("DAY " + str(%Organization.model.day))
+	print("ACTIVE: " + str(get_tree().get_nodes_in_group("ActiveChromatics").size()))
+	print("ELIMINATED: " + str(get_tree().get_nodes_in_group("EliminatedChromatics").size()))
+	for agency: AgencyModel in %Organization.model.agencies:
+		print(str(agency.agencyColor) + ": " + str(agency.chromatics.size()))
 
 func simulation_loop() -> void:
 	while %Organization.model.day < simulationConfig["dayCount"]:
-		print("DAY " + str(%Organization.model.day))
+		day_prints()
 		simulation_organization_day()
 		%Organization.model.hour = 0
 		%Organization.model.day += 1
 
 func simulation_organization_day() -> void:
-	%Organization.model.add_new_chromatics()
+	%Organization.model.add_new_chromatic_progress()
 	advance_all_resting_chromatic_status()
 	advance_upcoming_mission_status()
 	
@@ -63,7 +71,7 @@ func activate_mission(mission: Mission) -> void:
 	%Organization.model.activeMissions.append(mission)
 
 func advance_active_mission_status(hour: int) -> void:
-	var missions: Array = %Organization.model.activeMissions.duplicate
+	var missions: Array = %Organization.model.activeMissions.duplicate()
 	for mission: Mission in missions:
 		process_mission_encounters(mission, hour)
 
@@ -72,7 +80,7 @@ func process_mission_encounters(mission: Mission, hour: int) -> void:
 		if chromatic.eliminated:
 			continue
 		for focusChromatic: ChromaticModel in mission.assignedChromatics:
-			if focusChromatic != chromatic and not focusChromatic.eliminated:
+			if focusChromatic != chromatic and not focusChromatic.eliminated and not chromatic.eliminated:
 				var decision: bool = decide_to_engage(chromatic, focusChromatic, mission, hour)
 				if decision:
 					start_encounter(mission, chromatic, focusChromatic)
@@ -121,7 +129,7 @@ func class_difference_win_chance(initiatingClass: int, challengedClass: int) -> 
 	return winningChance
 
 func advance_active_missions() -> void:
-	var missions: Array[Mission] = %Organization.model.activeMissions.duplicate
+	var missions: Array[Mission] = %Organization.model.activeMissions.duplicate()
 	for mission: Mission in missions:
 		for chromatic: ChromaticModel in mission.assignedChromatics:
 			chromatic.give_rest()
@@ -137,7 +145,7 @@ func advance_all_resting_chromatic_status() -> void:
 				give_chromatic_mission(chromatic)
 
 func give_chromatic_mission(chromatic: Chromatic) -> void:
-	if %Organization.model.missions.size() == 0:
+	if %Organization.model.upcomingMissions.size() == 0:
 		create_assign_mission(chromatic)
 		return
 	
@@ -155,10 +163,10 @@ func give_chromatic_mission(chromatic: Chromatic) -> void:
 		chromatic.model.currentMission = chosenMission
 
 func create_assign_mission(chromatic: Chromatic) -> void:
-	%Organization.create_mission()
+	%Organization.create_mission(chromatic.model.classRank)
 	%Organization.model.upcomingMissions.back().assign_chromatic(chromatic)
 
-func mission_list_split(missionList: Array, ignoredColor: AgencyModel.AgencyColor, shuffled: bool = false, clearEmpty: bool = true) -> Array:
+func mission_list_split(missionList: Array, availableRank: int, ignoredColor: AgencyModel.AgencyColor, shuffled: bool = false, clearEmpty: bool = true) -> Array:
 	var sizeSplitMissions: Array[Array] = [[], [], [], [], []]
 	for mission: Mission in missionList:
 		# Filter out full missions

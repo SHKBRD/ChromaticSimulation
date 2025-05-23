@@ -9,6 +9,7 @@ enum MissionStatus {
 
 var remainingDays: int
 var status: MissionStatus
+var targetRank: int
 var assignedChromatics: Array[ChromaticModel]
 
 func _ready() -> void:
