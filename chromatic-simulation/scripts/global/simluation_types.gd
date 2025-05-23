@@ -15,15 +15,15 @@ var defaultSimulation: Dictionary = {
 	# Multiplier for allowed days of rest, multiplied for each class attained
 	"daysOfRestIncreasePerClass" : 1.25,
 	# Base willingness each chromatic has at the start of simulation
-	"startingMissionWillingness" : 0.1,
+	"startingMissionWillingness" : 0.0015,
 	# Willingness when a chromatic returns from a mission
-	"resetMissionWillingness" : 0.015,
+	"resetMissionWillingness" : 0.0015,
 	# Willingness increase rate per hour when not in mission
 	"hourlyMissionWillingnessRestGrowth" : 0.00005,
 	# Chromatic recruitment rate per agency, decimal is kept across tracking calculations
 	"chromaticRecruitmentRate" : 0.5,
 	# Possible mission selection time range, days
-	"missionSelectionTimeRange" : [7, 14]
+	"missionSelectionTimeRange" : [3, 14]
 }
 
 var firstToTenSimulation: Dictionary = {

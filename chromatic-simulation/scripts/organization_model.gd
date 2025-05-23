@@ -7,6 +7,8 @@ var upcomingMissions: Array[Mission] = []
 var activeMissions: Array[Mission] = []
 var completedMissions: Array[Mission] = []
 
+var agencyLeaderboard: Array[AgencyModel]
+
 var day: int
 var hour: int
 
@@ -26,4 +28,12 @@ func enroll_new_chromatic() -> void:
 			smallestAgencyInd = agencyInd
 	var chosenAgency: AgencyModel = agencies[smallestAgencyInd]
 	chosenAgency.get_parent().add_chromatic(chosenAgency.agencyColor)
-	
+
+func update_agency_leaderboard() -> void:
+	var newLeaderboard: Array[AgencyModel] = []
+	for times: int in range(agencyLeaderboard.size()):
+		var maxScore: int = agencyLeaderboard.
+		var maxAgency: AgencyModel
+		for agency: AgencyModel in agencyLeaderboard:
+			if agency.agencyScore > maxScore:
+				

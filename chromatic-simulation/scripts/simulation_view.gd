@@ -27,6 +27,7 @@ func day_prints() -> void:
 	print("ELIMINATED: " + str(get_tree().get_nodes_in_group("EliminatedChromatics").size()))
 	for agency: AgencyModel in %Organization.model.agencies:
 		print(str(agency.agencyColor) + ": " + str(agency.chromatics.size()))
+		print("HIGHEST: " + str(agency.get_highest_rank()))
 
 func simulation_loop() -> void:
 	while %Organization.model.day < simulationConfig["dayCount"]:
@@ -86,7 +87,7 @@ func process_mission_encounters(mission: Mission, hour: int) -> void:
 					start_encounter(mission, chromatic, focusChromatic)
 
 func decide_to_engage(chromatic1: ChromaticModel, chromatic2: ChromaticModel, mission: Mission, hour: int) -> bool:
-	var engagementConsideration: float = 0.25
+	var engagementConsideration: float = 0.02
 	var hourConsideration: float = 1-(abs((hour-16)/24.0))
 	engagementConsideration *= hourConsideration
 	var classDifferenceConsideration: float = class_difference_consideration(engagementConsideration, chromatic1.classRank, chromatic2.classRank)
@@ -109,13 +110,13 @@ func start_encounter(mission: Mission, chromatic1: ChromaticModel, chromatic2: C
 		creditsEarned = pow(2, chromatic1.classRank-chromatic2.classRank)
 		if chromatic1PerfectResult:
 			creditsEarned *= 2
-		chromatic1.award_credits(creditsEarned)
+		chromatic1.award_credits(creditsEarned, chromatic2.classRank)
 		chromatic2.eliminate()
 	else:
 		creditsEarned = pow(2, chromatic2.classRank-chromatic1.classRank)
 		if not chromatic1PerfectResult:
 			creditsEarned *= 2
-		chromatic2.award_credits(creditsEarned)
+		chromatic2.award_credits(creditsEarned, chromatic1.classRank)
 		chromatic1.eliminate()
 	
 	
@@ -150,7 +151,7 @@ func give_chromatic_mission(chromatic: Chromatic) -> void:
 		return
 	
 	var missionList: Array = %Organization.get_node("Missions").get_children()
-	var sizeSplitMissions: Array = mission_list_split(missionList, chromatic.model.agency ,true)
+	var sizeSplitMissions: Array = mission_list_split(missionList, chromatic.model.classRank, chromatic.model.agency, true)
 	var maxSizeInd: int = RandomNumberGenerator.new().randi_range(-1, sizeSplitMissions.size()-1)
 	if maxSizeInd == -1:
 		create_assign_mission(chromatic)
@@ -170,7 +171,7 @@ func mission_list_split(missionList: Array, availableRank: int, ignoredColor: Ag
 	var sizeSplitMissions: Array[Array] = [[], [], [], [], []]
 	for mission: Mission in missionList:
 		# Filter out full missions
-		if mission.status == Mission.MissionStatus.UPCOMING and mission.assignedChromatics.size() != 6 and not mission.has_chromatic_of_agency(ignoredColor):
+		if mission.status == Mission.MissionStatus.UPCOMING and mission.assignedChromatics.size() != 6 and not mission.has_chromatic_of_agency(ignoredColor) and abs(mission.targetRank - availableRank) < 2:
 			sizeSplitMissions[mission.assignedChromatics.size()-1].append(mission)
 	
 	if clearEmpty:

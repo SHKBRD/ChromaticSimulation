@@ -7,6 +7,8 @@ var agency: AgencyModel.AgencyColor
 
 var classRank: int
 var classCredits: float
+var highestClassEliminated: int
+
 var eliminated: bool
 
 var currentMission: Mission
@@ -18,6 +20,7 @@ func initialize_model(color: AgencyModel.AgencyColor) -> void:
 	classCredits = 0
 	eliminated = false
 	currentMission = null
+	highestClassEliminated = 1
 	missionWillingness = Simulation.simulationConfig.startingMissionWillingness
 	
 	Chromatic.existingChromatics += 1
@@ -31,8 +34,11 @@ func decide_to_go_on_mission() -> bool:
 func increase_mission_willingness() -> void:
 	missionWillingness += Simulation.simulationConfig.hourlyMissionWillingnessRestGrowth
 
-func award_credits(credits: float) -> void:
-	while classCredits >= classRank:
+func award_credits(credits: float, rank: int) -> void:
+	if rank > highestClassEliminated:
+		highestClassEliminated = rank
+	classCredits += credits
+	while classCredits >= classRank and classRank < highestClassEliminated+1:
 		classCredits -= classRank
 		classRank += 1
 
@@ -46,6 +52,7 @@ func eliminate() -> void:
 	
 	var agency: Agency = get_parent().get_parent().get_parent()
 	agency.agencyModel.chromatics.erase(self)
+	agency.agencyModel.eliminatedChromatics.append(self)
 	eliminated = true
 
 func give_rest() -> void:
