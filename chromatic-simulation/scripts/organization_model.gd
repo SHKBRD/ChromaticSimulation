@@ -30,8 +30,16 @@ func enroll_new_chromatic() -> void:
 	chosenAgency.get_parent().add_chromatic(chosenAgency.agencyColor)
 
 func update_agency_leaderboard() -> void:
-	agencyLeaderboard.sort_custom(func(a: AgencyModel, b: AgencyModel): return a.agencyScore > b.agencyScore)
+	if agencyLeaderboard.size() == 0:
+		agencyLeaderboard = agencies.duplicate()
+	agencyLeaderboard.sort_custom(func(a: AgencyModel, b: AgencyModel): return a.agencyScore < b.agencyScore)
 	
-func get_agency_elimination_bonus(agency: AgencyModel.AgencyColor) -> float:
-	var placeInd: int = agencyLeaderboard.find_custom((func(focusAgency: AgencyModel): focusAgency.agencyColor == agency).bind())
-	return placeInd * 0.4
+func get_agency_elimination_bonus_mult(agency: AgencyModel.AgencyColor) -> float:
+	var placeInd: int = 0
+	for agencyInd: int in agencyLeaderboard.size():
+		if agencyLeaderboard[agencyInd].agencyColor == agency:
+			placeInd = agencyInd
+			break
+	var mult: float = (agencyLeaderboard.size() - 1 - placeInd) * 0.2 + 1.0
+	#print(mult)
+	return mult

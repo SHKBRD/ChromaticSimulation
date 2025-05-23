@@ -16,7 +16,7 @@ var missionWillingness: float
 
 func initialize_model(color: AgencyModel.AgencyColor) -> void:
 	agency = color
-	print(color)
+	#print(color)
 	classRank = 1
 	classCredits = 0
 	eliminated = false

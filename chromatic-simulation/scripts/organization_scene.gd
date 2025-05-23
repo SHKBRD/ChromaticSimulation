@@ -16,6 +16,7 @@ func initialize_organization(chromaticAgencyCount: int) -> void:
 		%AgencyScenes.add_child(newAgency)
 		newAgency.initialize_agency(AgencyModel.AgencyColor[agencyColor], chromaticAgencyCount)
 		%OrganizationModel.agencies.append(newAgency.get_node("AgencyModel"))
+	model.update_agency_leaderboard()
 
 func create_mission(rank: int) -> void:
 	var newMission: Mission = missionScene.instantiate()
