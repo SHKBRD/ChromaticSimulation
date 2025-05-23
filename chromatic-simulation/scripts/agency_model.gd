@@ -17,6 +17,9 @@ var missionAvailableChromatics: Array[ChromaticModel]
 
 var agencyScore: int
 
+func _ready() -> void:
+	pass
+
 func update_agency_score() -> void:
 	agencyScore = 0
 	for chromatic : ChromaticModel in chromatics:

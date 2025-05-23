@@ -26,8 +26,9 @@ func day_prints() -> void:
 	print("ACTIVE: " + str(get_tree().get_nodes_in_group("ActiveChromatics").size()))
 	print("ELIMINATED: " + str(get_tree().get_nodes_in_group("EliminatedChromatics").size()))
 	for agency: AgencyModel in %Organization.model.agencies:
+		#print(agency.agencyColor)
 		print(str(agency.agencyColor) + ": " + str(agency.chromatics.size()))
-		print("HIGHEST: " + str(agency.get_highest_rank()))
+		print("SCORE: " + str(agency.agencyScore))
 
 func simulation_loop() -> void:
 	while %Organization.model.day < simulationConfig["dayCount"]:
@@ -46,6 +47,7 @@ func simulation_organization_day() -> void:
 		%Organization.model.hour += 1
 	
 	advance_active_missions()
+	%Organization.model.update_agency_leaderboard()
 
 func simulation_organization_hour(hour: int) -> void:
 	update_resting_chromatic_willingness()
@@ -110,12 +112,14 @@ func start_encounter(mission: Mission, chromatic1: ChromaticModel, chromatic2: C
 		creditsEarned = pow(2, chromatic1.classRank-chromatic2.classRank)
 		if chromatic1PerfectResult:
 			creditsEarned *= 2
+		creditsEarned *= %Organization.model.get_agency_elimination_bonus(chromatic2.agency)
 		chromatic1.award_credits(creditsEarned, chromatic2.classRank)
 		chromatic2.eliminate()
 	else:
 		creditsEarned = pow(2, chromatic2.classRank-chromatic1.classRank)
 		if not chromatic1PerfectResult:
 			creditsEarned *= 2
+		creditsEarned *= %Organization.model.get_agency_elimination_bonus(chromatic1.agency)
 		chromatic2.award_credits(creditsEarned, chromatic1.classRank)
 		chromatic1.eliminate()
 	

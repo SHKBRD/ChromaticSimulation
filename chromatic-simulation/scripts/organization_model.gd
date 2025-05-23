@@ -30,10 +30,8 @@ func enroll_new_chromatic() -> void:
 	chosenAgency.get_parent().add_chromatic(chosenAgency.agencyColor)
 
 func update_agency_leaderboard() -> void:
-	var newLeaderboard: Array[AgencyModel] = []
-	for times: int in range(agencyLeaderboard.size()):
-		var maxScore: int = agencyLeaderboard.
-		var maxAgency: AgencyModel
-		for agency: AgencyModel in agencyLeaderboard:
-			if agency.agencyScore > maxScore:
-				
+	agencyLeaderboard.sort_custom(func(a: AgencyModel, b: AgencyModel): return a.agencyScore > b.agencyScore)
+	
+func get_agency_elimination_bonus(agency: AgencyModel.AgencyColor) -> float:
+	var placeInd: int = agencyLeaderboard.find_custom((func(focusAgency: AgencyModel): focusAgency.agencyColor == agency).bind())
+	return placeInd * 0.4

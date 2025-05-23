@@ -16,6 +16,7 @@ var missionWillingness: float
 
 func initialize_model(color: AgencyModel.AgencyColor) -> void:
 	agency = color
+	print(color)
 	classRank = 1
 	classCredits = 0
 	eliminated = false
@@ -41,6 +42,7 @@ func award_credits(credits: float, rank: int) -> void:
 	while classCredits >= classRank and classRank < highestClassEliminated+1:
 		classCredits -= classRank
 		classRank += 1
+	get_parent().get_parent().get_parent().agencyModel.update_agency_score()
 
 func eliminate() -> void:
 	#var preRemove: int = get_tree().get_nodes_in_group("ActiveChromatics").size()
