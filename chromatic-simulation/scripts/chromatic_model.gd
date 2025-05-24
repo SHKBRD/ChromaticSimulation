@@ -41,7 +41,8 @@ func award_credits(credits: float, rank: int) -> void:
 	if rank > highestClassEliminated:
 		highestClassEliminated = rank
 	classCredits += credits
-	while classCredits >= classRank and classRank < highestClassEliminated+1:
+	while classCredits >= classRank and classRank <= highestClassEliminated+1:
+	#while classCredits >= classRank:
 		classCredits -= classRank
 		classRank += 1
 	get_parent().get_parent().get_parent().agencyModel.update_agency_score()

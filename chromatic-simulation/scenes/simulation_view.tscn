@@ -27,5 +27,7 @@ script = ExtResource("3_cl4vn")
 
 [node name="Graph" parent="Graphs" instance=ExtResource("3_xxlyh")]
 layout_mode = 2
+width = 600.0
+height = 400.0
 
 [connection signal="pressed" from="StartButton" to="." method="_on_start_button_pressed"]

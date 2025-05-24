@@ -43,3 +43,18 @@ func get_agency_elimination_bonus_mult(agency: AgencyModel.AgencyColor) -> float
 	var mult: float = (agencyLeaderboard.size() - 1 - placeInd) * 0.2 + 1.0
 	#print(mult)
 	return mult
+
+func get_agency_adjacency_bonus(agency1: AgencyModel.AgencyColor, agency2: AgencyModel.AgencyColor) -> float:
+	var agency1Ind: int = 0
+	for agencyFocusInd: int in agencyLeaderboard.size():
+		if agencyLeaderboard[agencyFocusInd].agencyColor == agency1:
+			agency1Ind = agencyFocusInd
+			break
+	var agency2Ind: int = 0
+	for agencyFocusInd: int in agencyLeaderboard.size():
+		if agencyLeaderboard[agencyFocusInd].agencyColor == agency2:
+			agency2Ind = agencyFocusInd
+			break
+	var agencyPlacementBonus: float = 1 + pow(0.5, abs(agency1Ind - agency2Ind))
+	print(agencyPlacementBonus)
+	return agencyPlacementBonus

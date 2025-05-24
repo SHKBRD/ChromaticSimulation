@@ -34,7 +34,9 @@ func update_graphs() -> void:
 	for graph: Graph in %Graphs.graphs:
 		match graph.type:
 			Graph.GraphType.AGENCY_CHROMATIC_COUNT:
-				pass
+				for agencyInd: AgencyModel.AgencyColor in AgencyModel.AgencyColor.values():
+					var agencyPopulation: int = %Organization.model.agencies[agencyInd].chromatics.size()
+					graph.add_data(agencyInd, %Organization.model.day, agencyPopulation)
 
 func simulation_loop() -> void:
 	while %Organization.model.day < simulationConfig["dayCount"]:
@@ -112,6 +114,7 @@ func start_encounter(mission: Mission, chromatic1: ChromaticModel, chromatic2: C
 		if chromatic1PerfectResult:
 			creditsEarned *= 2
 		creditsEarned *= %Organization.model.get_agency_elimination_bonus_mult(chromatic2.agency)
+		#creditsEarned *= %Organization.model.get_agency_adjacency_bonus(chromatic1.agency, chromatic2.agency)
 		chromatic1.award_credits(creditsEarned, chromatic2.classRank)
 		chromatic2.eliminate()
 	else:
@@ -119,6 +122,7 @@ func start_encounter(mission: Mission, chromatic1: ChromaticModel, chromatic2: C
 		if not chromatic1PerfectResult:
 			creditsEarned *= 2
 		creditsEarned *= %Organization.model.get_agency_elimination_bonus_mult(chromatic1.agency)
+		#creditsEarned *= %Organization.model.get_agency_adjacency_bonus(chromatic1.agency, chromatic2.agency)
 		chromatic2.award_credits(creditsEarned, chromatic1.classRank)
 		chromatic1.eliminate()
 	
