@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://baxb082o2cvc1"]
+
+[ext_resource type="Script" uid="uid://vq726t4m4yov" path="res://scenes/graph.gd" id="1_6llor"]
+
+[node name="Graph" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+script = ExtResource("1_6llor")
+
+[node name="LinePlot" parent="." instance_placeholder="res://scenes/line_plot.tscn"]

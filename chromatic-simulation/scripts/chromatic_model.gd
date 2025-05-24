@@ -33,7 +33,9 @@ func decide_to_go_on_mission() -> bool:
 	
 
 func increase_mission_willingness() -> void:
-	missionWillingness += Simulation.simulationConfig.hourlyMissionWillingnessRestGrowth
+	#missionWillingness += Simulation.simulationConfig.hourlyMissionWillingnessRestGrowth
+	missionWillingness += Simulation.simulationConfig.dailyMissionWillingnessRestGrowth
+
 
 func award_credits(credits: float, rank: int) -> void:
 	if rank > highestClassEliminated:

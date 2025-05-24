@@ -50,15 +50,7 @@ func simulation_organization_day() -> void:
 	%Organization.model.update_agency_leaderboard()
 
 func simulation_organization_hour(hour: int) -> void:
-	update_resting_chromatic_willingness()
 	advance_active_mission_status(hour)
-
-func update_resting_chromatic_willingness() -> void:
-	var processChromatics: Array = get_tree().get_nodes_in_group("ActiveChromatics")
-	processChromatics.shuffle()
-	for chromatic: Chromatic in processChromatics:
-		if chromatic.model.currentMission == null:
-			chromatic.model.increase_mission_willingness()
 
 func advance_upcoming_mission_status() -> void:
 	var missions: Array = %Organization.model.upcomingMissions.duplicate()
@@ -89,7 +81,7 @@ func process_mission_encounters(mission: Mission, hour: int) -> void:
 					start_encounter(mission, chromatic, focusChromatic)
 
 func decide_to_engage(chromatic1: ChromaticModel, chromatic2: ChromaticModel, mission: Mission, hour: int) -> bool:
-	var engagementConsideration: float = 0.02
+	var engagementConsideration: float = 0.005
 	var hourConsideration: float = 1-(abs((hour-16)/24.0))
 	engagementConsideration *= hourConsideration
 	var classDifferenceConsideration: float = class_difference_consideration(engagementConsideration, chromatic1.classRank, chromatic2.classRank)
@@ -138,6 +130,8 @@ func advance_active_missions() -> void:
 	for mission: Mission in missions:
 		for chromatic: ChromaticModel in mission.assignedChromatics:
 			chromatic.give_rest()
+		%Organization.model.activeMissions.erase(mission)
+		%Organization.model.completedMissions.append(mission)
 			
 
 func advance_all_resting_chromatic_status() -> void:
@@ -145,6 +139,7 @@ func advance_all_resting_chromatic_status() -> void:
 	processChromatics.shuffle()
 	for chromatic: Chromatic in processChromatics:
 		if chromatic.model.currentMission == null:
+			chromatic.model.increase_mission_willingness()
 			var decision: bool = chromatic.model.decide_to_go_on_mission()
 			if decision:
 				give_chromatic_mission(chromatic)

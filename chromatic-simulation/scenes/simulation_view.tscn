@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://bv42ofvy2bw1"]
+[gd_scene load_steps=5 format=3 uid="uid://bv42ofvy2bw1"]
 
 [ext_resource type="Script" uid="uid://ccoiv0446wvkv" path="res://scripts/simulation_view.gd" id="1_rm8j5"]
 [ext_resource type="PackedScene" uid="uid://co41i7wu0asr7" path="res://scenes/organization.tscn" id="2_mi5mv"]
+[ext_resource type="Script" uid="uid://g36v3y3srlkf" path="res://scenes/graphs.gd" id="3_cl4vn"]
+[ext_resource type="PackedScene" uid="uid://baxb082o2cvc1" path="res://scenes/graph.tscn" id="3_xxlyh"]
 
 [node name="SimulationView" type="Node2D"]
 script = ExtResource("1_rm8j5")
@@ -13,5 +15,16 @@ unique_name_in_owner = true
 offset_right = 206.0
 offset_bottom = 117.0
 text = "START"
+
+[node name="Graphs" type="GridContainer" parent="."]
+offset_left = 10.0
+offset_top = 150.0
+offset_right = 10.0
+offset_bottom = 150.0
+columns = 3
+script = ExtResource("3_cl4vn")
+
+[node name="Graph" parent="Graphs" instance=ExtResource("3_xxlyh")]
+layout_mode = 2
 
 [connection signal="pressed" from="StartButton" to="." method="_on_start_button_pressed"]

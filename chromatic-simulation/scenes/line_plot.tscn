@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bx2lxht2bptbd"]
+
+[ext_resource type="Script" uid="uid://b3fwau7t68sgm" path="res://scenes/line_plot.gd" id="1_ukc1d"]
+
+[node name="LinePlot" type="Node"]
+script = ExtResource("1_ukc1d")
