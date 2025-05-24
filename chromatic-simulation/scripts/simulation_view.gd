@@ -52,9 +52,22 @@ func update_graphs() -> void:
 				graph.add_data(1, day, elimCount)
 				graph.add_data(2, day, activeCount+elimCount)
 			Graph.GraphType.MISSION_SIZES:
-				pass
+				var sizeCount: Array = []
+				for i: int in range(6):
+					sizeCount.append(0)
+				for mission: Mission in %Organization.model.completedMissions:
+					sizeCount[mission.assignedChromatics.size()-1] += 1
+				for countInd: int in sizeCount.size():
+					graph.add_data(countInd, day, sizeCount[countInd])
 			Graph.GraphType.POPULATION_BY_RANK:
-				pass
+				var rankCount: Array = []
+				for i: int in range(Simulation.simulationConfig.maximumClassRank):
+					rankCount.append(0)
+				for agency: AgencyModel in %Organization.model.agencies:
+					for chromatic: ChromaticModel in agency.chromatics:
+						rankCount[chromatic.classRank-1] += 1
+				for countInd: int in rankCount.size():
+					graph.add_data(countInd, day, rankCount[countInd])
 
 func simulation_loop() -> void:
 	while %Organization.model.day < simulationConfig["dayCount"]:

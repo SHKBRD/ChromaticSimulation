@@ -95,9 +95,16 @@ func init_graph(type: GraphType) -> void:
 				var newLinePlot = LinePlot.make_line_plot(chromaticStatuses[chromaticStatus].color, chromaticStatuses[chromaticStatus].label)
 				linePlots.append(newLinePlot)
 		GraphType.MISSION_SIZES:
-			pass
+			for missionCount: int in range(1, 7):
+				var color: Color = Color(missionCount/10.0, missionCount/6.0 , missionCount/18.0)
+				var newLinePlot = LinePlot.make_line_plot(color, str(missionCount))
+				linePlots.append(newLinePlot)
 		GraphType.POPULATION_BY_RANK:
-			pass
+			var maxRank: int = 9
+			for rankCount: int in range(1, maxRank+1):
+				var color: Color = Color(float(rankCount)/maxRank, float(rankCount)/maxRank, float(rankCount)/maxRank)
+				var newLinePlot = LinePlot.make_line_plot(color, str(rankCount))
+				linePlots.append(newLinePlot)
 
 func update_graph_scale() -> void:
 	var masterX: Array = []

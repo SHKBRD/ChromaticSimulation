@@ -52,6 +52,20 @@ type = 3
 width = 600.0
 height = 400.0
 
+[node name="Graph5" parent="Graphs" instance=ExtResource("3_xxlyh")]
+visible = false
+layout_mode = 2
+type = 4
+width = 600.0
+height = 400.0
+
+[node name="Graph6" parent="Graphs" instance=ExtResource("3_xxlyh")]
+visible = false
+layout_mode = 2
+type = 5
+width = 600.0
+height = 400.0
+
 [node name="Buttons" type="Control" parent="."]
 layout_mode = 3
 anchors_preset = 0
