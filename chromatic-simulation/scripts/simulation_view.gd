@@ -30,12 +30,19 @@ func day_prints() -> void:
 		print(str(agency.agencyColor) + ": " + str(agency.chromatics.size()))
 		print("SCORE: " + str(agency.agencyScore) + " MAX CLASS: " + str(agency.get_highest_rank()))
 
+func update_graphs() -> void:
+	for graph: Graph in %Graphs.graphs:
+		match graph.type:
+			Graph.GraphType.AGENCY_CHROMATIC_COUNT:
+				pass
+
 func simulation_loop() -> void:
 	while %Organization.model.day < simulationConfig["dayCount"]:
 		day_prints()
 		simulation_organization_day()
 		%Organization.model.hour = 0
 		%Organization.model.day += 1
+		update_graphs()
 
 func simulation_organization_day() -> void:
 	%Organization.model.add_new_chromatic_progress()
