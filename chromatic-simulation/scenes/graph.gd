@@ -29,7 +29,7 @@ var linePlots: Array[LinePlot]
 func _ready() -> void:
 	var baseLinePlot: LinePlot = LinePlot.make_line_plot(Color.GREEN)
 	baseLinePlot.xVals = [0, 1, 2, 3, 4, 5, 6, 7 , 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
-	baseLinePlot.yVals = [20, 15, 2000, 3, 42, 20, 10, 70, 30, 99, 95, 78, 32, 45, 2, 4, 8, 16, 32, 64]
+	baseLinePlot.yVals = [20, 15, 20, 3, 42, 20, 10, 70, 30, 99, 95, 78, 32, 45, 2, 4, 8, 16, 32, 64]
 	linePlots.append(baseLinePlot)
 
 func _draw() -> void:
@@ -56,7 +56,7 @@ func draw_line_plot(plot: LinePlot) -> void:
 		var adjPlot1: Vector2 = Vector2(plot1.x*scale.x-minX, height-(plot1.y*scale.y))
 		var adjPlot2: Vector2 = Vector2(plot2.x*scale.x-minX, height-(plot2.y*scale.y))
 		
-		draw_line(adjPlot1, adjPlot2, Color(0.1, 0.1, 0.1), 5.0)
+		draw_line(adjPlot1, adjPlot2, plot.color, 3.0)
 	
 
 func _process(_delta) -> void:
