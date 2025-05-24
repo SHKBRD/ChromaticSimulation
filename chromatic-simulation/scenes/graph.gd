@@ -65,11 +65,35 @@ func init_graph(type: GraphType) -> void:
 				linePlots.append(newLinePlot)
 				
 		GraphType.AGENCY_HIGHEST_RANK:
-			pass
+			var agencyColors: Dictionary[AgencyModel.AgencyColor, Dictionary] = {
+				AgencyModel.AgencyColor.RED : {"color" : Color.RED, "label" : "Red"},
+				AgencyModel.AgencyColor.BLUE : {"color" : Color.BLUE, "label" : "Blue"},
+				AgencyModel.AgencyColor.GREEN : {"color" : Color.GREEN, "label" : "Green"},
+				AgencyModel.AgencyColor.PURPLE : {"color" : Color.PURPLE, "label" : "Purple"},
+				AgencyModel.AgencyColor.ORANGE : {"color" : Color.ORANGE, "label" : "Orange"},
+				AgencyModel.AgencyColor.PINK : {"color" : Color.PINK, "label" : "Pink"},
+			}
+			for agency: AgencyModel.AgencyColor in AgencyModel.AgencyColor.values():
+				var newLinePlot = LinePlot.make_line_plot(agencyColors[agency].color, agencyColors[agency].label)
+				linePlots.append(newLinePlot)
 		GraphType.MISSION_COUNTS:
-			pass
+			var missionTypes: Dictionary[String, Dictionary] = {
+				"upcoming" : {"color" : Color.SLATE_BLUE, "label" : "Upcoming"},
+				"active" : {"color" : Color.YELLOW, "label" : "Active"},
+				"completed" : {"color" : Color.BLACK, "label" : "Completed"},
+			}
+			for missionType: String in missionTypes.keys():
+				var newLinePlot = LinePlot.make_line_plot(missionTypes[missionType].color, missionTypes[missionType].label)
+				linePlots.append(newLinePlot)
 		GraphType.ACTIVE_ELIMINATED_CHROMATICS:
-			pass
+			var chromaticStatuses: Dictionary[String, Dictionary] = {
+				"active" : {"color" : Color.GREEN, "label" : "Active"},
+				"eliminated" : {"color" : Color.RED, "label" : "Eliminated"},
+				"total" : {"color" : Color.YELLOW, "label" : "Total"},
+			}
+			for chromaticStatus: String in chromaticStatuses.keys():
+				var newLinePlot = LinePlot.make_line_plot(chromaticStatuses[chromaticStatus].color, chromaticStatuses[chromaticStatus].label)
+				linePlots.append(newLinePlot)
 		GraphType.MISSION_SIZES:
 			pass
 		GraphType.POPULATION_BY_RANK:

@@ -26,17 +26,35 @@ func day_prints() -> void:
 	print("ACTIVE: " + str(get_tree().get_nodes_in_group("ActiveChromatics").size()))
 	print("ELIMINATED: " + str(get_tree().get_nodes_in_group("EliminatedChromatics").size()))
 	for agency: AgencyModel in %Organization.model.agencies:
-		#print(agency.agencyColor)
-		print(str(agency.agencyColor) + ": " + str(agency.chromatics.size()))
+		var agencyColorName: String = AgencyModel.AgencyColor.keys()[AgencyModel.AgencyColor.values().find(agency.agencyColor)]
+		print(agencyColorName + ": " + str(agency.chromatics.size()))
 		print("SCORE: " + str(agency.agencyScore) + " MAX CLASS: " + str(agency.get_highest_rank()))
 
 func update_graphs() -> void:
+	var day: int = %Organization.model.day
 	for graph: Graph in %Graphs.graphs:
 		match graph.type:
 			Graph.GraphType.AGENCY_CHROMATIC_COUNT:
 				for agencyInd: AgencyModel.AgencyColor in AgencyModel.AgencyColor.values():
 					var agencyPopulation: int = %Organization.model.agencies[agencyInd].chromatics.size()
-					graph.add_data(agencyInd, %Organization.model.day, agencyPopulation)
+					graph.add_data(agencyInd, day, agencyPopulation)
+			Graph.GraphType.AGENCY_HIGHEST_RANK:
+				for agencyInd: AgencyModel.AgencyColor in AgencyModel.AgencyColor.values():
+					graph.add_data(agencyInd, day, %Organization.model.agencies[agencyInd].get_highest_rank())
+			Graph.GraphType.MISSION_COUNTS:
+				graph.add_data(0, day, %Organization.model.upcomingMissions.size())
+				graph.add_data(1, day, %Organization.model.activeMissions.size())
+				graph.add_data(2, day, %Organization.model.completedMissions.size())
+			Graph.GraphType.ACTIVE_ELIMINATED_CHROMATICS:
+				var activeCount: int = get_tree().get_nodes_in_group("ActiveChromatics").size()
+				var elimCount: int = get_tree().get_nodes_in_group("EliminatedChromatics").size()
+				graph.add_data(0, day, activeCount)
+				graph.add_data(1, day, elimCount)
+				graph.add_data(2, day, activeCount+elimCount)
+			Graph.GraphType.MISSION_SIZES:
+				pass
+			Graph.GraphType.POPULATION_BY_RANK:
+				pass
 
 func simulation_loop() -> void:
 	while %Organization.model.day < simulationConfig["dayCount"]:

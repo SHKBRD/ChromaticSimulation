@@ -7,9 +7,9 @@ enum SimulationType {
 
 const defaultSimulation: Dictionary = {
 	# Base amount for each agency to populate with Chromatics
-	"startingAgencyCount" : 90,
+	"startingAgencyCount" : 1000,
 	# Days to run the simulation
-	"dayCount" : 365*30,
+	"dayCount" : 365*10,
 	# C1 days of rest
 	"basemaxDaysOfRest" : 90,
 	# Multiplier for allowed days of rest, multiplied for each class attained
@@ -23,7 +23,9 @@ const defaultSimulation: Dictionary = {
 	# Chromatic recruitment rate per agency, decimal is kept across tracking calculations
 	"chromaticRecruitmentRate" : 2/7.0,
 	# Possible mission selection time range, days
-	"missionSelectionTimeRange" : [14, 31]
+	"missionSelectionTimeRange" : [14, 31],
+	# Maximum Class rank a Chromatic can have
+	"maximumClassRank" : 9
 }
 
 const firstToTenSimulation: Dictionary = {

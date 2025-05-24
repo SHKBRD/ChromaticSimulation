@@ -41,7 +41,7 @@ func award_credits(credits: float, rank: int) -> void:
 	if rank > highestClassEliminated:
 		highestClassEliminated = rank
 	classCredits += credits
-	while classCredits >= classRank and classRank <= highestClassEliminated+1:
+	while classCredits >= classRank and classRank <= highestClassEliminated+1 and classRank < Simulation.simulationConfig.maximumClassRank:
 	#while classCredits >= classRank:
 		classCredits -= classRank
 		classRank += 1
