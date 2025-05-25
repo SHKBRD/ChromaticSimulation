@@ -20,14 +20,15 @@ text = "START"
 unique_name_in_owner = true
 layout_mode = 3
 anchors_preset = 0
-offset_left = 134.0
-offset_top = 150.0
-offset_right = 134.0
-offset_bottom = 150.0
+offset_left = 225.0
+offset_top = 169.0
+offset_right = 225.0
+offset_bottom = 169.0
 script = ExtResource("3_cl4vn")
 
 [node name="Graph" parent="Graphs" instance=ExtResource("3_xxlyh")]
 layout_mode = 2
+yAxisLabel = "Chromatics"
 width = 600.0
 height = 400.0
 
@@ -35,6 +36,7 @@ height = 400.0
 visible = false
 layout_mode = 2
 type = 1
+yAxisLabel = "Rank"
 width = 600.0
 height = 400.0
 
@@ -42,6 +44,7 @@ height = 400.0
 visible = false
 layout_mode = 2
 type = 2
+yAxisLabel = "Missions"
 width = 600.0
 height = 400.0
 
@@ -49,6 +52,7 @@ height = 400.0
 visible = false
 layout_mode = 2
 type = 3
+yAxisLabel = "Chromatics"
 width = 600.0
 height = 400.0
 
@@ -56,6 +60,7 @@ height = 400.0
 visible = false
 layout_mode = 2
 type = 4
+yAxisLabel = "Missions"
 width = 600.0
 height = 400.0
 
@@ -63,6 +68,7 @@ height = 400.0
 visible = false
 layout_mode = 2
 type = 5
+yAxisLabel = "Chromatics"
 width = 600.0
 height = 400.0
 

@@ -7,9 +7,9 @@ enum SimulationType {
 
 const defaultSimulation: Dictionary = {
 	# Base amount for each agency to populate with Chromatics
-	"startingAgencyCount" : 200,
+	"startingAgencyCount" : 90,
 	# Days to run the simulation
-	"dayCount" : 365*15,
+	"dayCount" : 365*10,
 	# C1 days of rest
 	"basemaxDaysOfRest" : 90,
 	# Multiplier for allowed days of rest, multiplied for each class attained

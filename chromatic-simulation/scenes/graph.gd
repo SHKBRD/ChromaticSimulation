@@ -11,20 +11,24 @@ enum GraphType {
 }
 
 const graphTitles: Dictionary[GraphType, String] = {
-	GraphType.AGENCY_CHROMATIC_COUNT : "Chromatic Count By Agency",
-	GraphType.AGENCY_HIGHEST_RANK : "Highest Rank in Agency",
+	GraphType.AGENCY_CHROMATIC_COUNT : "Chromatic Count By Group",
+	GraphType.AGENCY_HIGHEST_RANK : "Highest Rank in Group",
 	GraphType.MISSION_COUNTS : "Mission Counts By Type",
 	GraphType.ACTIVE_ELIMINATED_CHROMATICS : "Chromatic Count",
 	GraphType.MISSION_SIZES : "Mission Size",
-	GraphType.POPULATION_BY_RANK : "Chromatics with Rank"
+	GraphType.POPULATION_BY_RANK : "Active Chromatics by Rank"
 }
 
 @export var type: GraphType
 
 var linePlots: Array[LinePlot]
 
+@export var xAxisLabel: String = "Days"
+@export var yAxisLabel: String
+
 @export var width: float = 300
 @export var height: float = 200
+@export var baseTickMarkLength: float = 30
 
 var graphScale: Dictionary = {
 	"minX" : 0,
@@ -36,15 +40,6 @@ var graphScale: Dictionary = {
 
 func _ready() -> void:
 	init_graph(type)
-	#var baseLinePlot: LinePlot = LinePlot.make_line_plot(Color.GREEN, "TEST")
-	#baseLinePlot.xVals = [0, 1, 2, 3, 4, 5, 6, 7 , 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19]
-	#baseLinePlot.yVals = [20, 15, 20, 3, 42, 20, 10, 70, 30, 99, 95, 78, 32, 45, 2, 4, 8, 16, 32, 64]
-	#linePlots.append(baseLinePlot)
-	#
-	#var baseLinePlot2: LinePlot = LinePlot.make_line_plot(Color.BLUE, "TEST")
-	#baseLinePlot2.xVals = [0, 1, 2, 3, 4, 5, 6, 7 , 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 30]
-	#baseLinePlot2.yVals = [20, 15, 20, 3, 42, 20, 10, 70, 30, 99, 95, 78, 32, 45, 2, 4, 8, 16, 32, 64]
-	#linePlots.append(baseLinePlot2)
 	
 	update_graph_scale()
 	
@@ -142,6 +137,7 @@ func _draw() -> void:
 	for plot: LinePlot in linePlots:
 		draw_line_plot(plot)
 	draw_name()
+	draw_axes_elements()
 	#draw_line(Vector2(4.0, 1.0), Vector2(4.0, 4.0), Color.GREEN, 2.0)
 	#draw_line(Vector2(7.5, 1.0), Vector2(7.5, 4.0), Color.GREEN, 3.0)
 
@@ -166,10 +162,21 @@ func draw_line_plot(plot: LinePlot) -> void:
 		var adjPlot2: Vector2 = Vector2(plot2.x*graphScale.scale.x-graphScale.minX, height-((plot2.y-graphScale.minY)*graphScale.scale.y))
 		
 		draw_line(adjPlot1, adjPlot2, plot.color, 3.0)
+
+func draw_axes_elements() -> void:
+	draw_line(Vector2(0, 0), Vector2(-baseTickMarkLength, 0), Color.LIGHT_GRAY, 3)
+	draw_string(ThemeDB.fallback_font, Vector2(-baseTickMarkLength, 0) - Vector2(105, -5), str(int(graphScale.maxY)), HORIZONTAL_ALIGNMENT_RIGHT, 100, 16)
+	draw_line(Vector2(0, height), Vector2(-baseTickMarkLength, height), Color.LIGHT_GRAY, 3)
+	draw_string(ThemeDB.fallback_font, Vector2(-baseTickMarkLength, height) - Vector2(105, -5), str(int(graphScale.minY)), HORIZONTAL_ALIGNMENT_RIGHT, 100, 16)
+	draw_string(ThemeDB.fallback_font, Vector2(-50, height/2) - Vector2(105, -5), str(yAxisLabel), HORIZONTAL_ALIGNMENT_RIGHT, 150, 16)
 	
+	draw_line(Vector2(0, height), Vector2(0, height + baseTickMarkLength), Color.LIGHT_GRAY, 3)
+	draw_string(ThemeDB.fallback_font, Vector2(0, height+baseTickMarkLength) - Vector2(95, -15), str(int(graphScale.minX)), HORIZONTAL_ALIGNMENT_RIGHT, 100, 16)
+	draw_line(Vector2(width, height), Vector2(width, height + baseTickMarkLength), Color.LIGHT_GRAY, 3)
+	draw_string(ThemeDB.fallback_font, Vector2(width, height + baseTickMarkLength) - Vector2(95, -15), str(int(graphScale.maxX)), HORIZONTAL_ALIGNMENT_RIGHT, 100, 16)
 
 func draw_name() -> void:
-	draw_string(ThemeDB.fallback_font, Vector2(0, height+20), graphTitles[type])
+	draw_string(ThemeDB.fallback_font, Vector2(0, -17), graphTitles[type])
 
 func _process(_delta) -> void:
 	queue_redraw()
