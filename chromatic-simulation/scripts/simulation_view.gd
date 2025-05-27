@@ -2,15 +2,21 @@ extends Node2D
 class_name Simulation
 
 static var simulationConfig: Dictionary
+static var runningSimType: SimulationTypes.SimulationType
 
 static func roll_chance(min: float, max: float, thresh: float) -> bool:
 	var rollNum: float = RandomNumberGenerator.new().randf_range(min, max)
 	return rollNum <= thresh
 
+static var minDay: int = 1
+static var maxDay: int = SimulationTypes.defaultSimulation.get("dayCount")
+static var chosenDay: int = minDay
+
 func _ready() -> void:
-	pass
+	update_chosen_day(chosenDay)
 
 func start_simulation(simType: SimulationTypes.SimulationType):
+	runningSimType = simType
 	simulationConfig = SimulationTypes.simulationLookups[simType]
 	%Organization.initialize_organization(simulationConfig.startingAgencyCount)
 	simulation_loop()
@@ -22,9 +28,10 @@ func simulation_results() -> void:
 	pass
 
 func day_prints() -> void:
+	var activeElimCount: Array[int] = %Organization.model.get_active_elim_count()
 	print("DAY " + str(%Organization.model.day))
-	print("ACTIVE: " + str(get_tree().get_nodes_in_group("ActiveChromatics").size()))
-	print("ELIMINATED: " + str(get_tree().get_nodes_in_group("EliminatedChromatics").size()))
+	print("ACTIVE: " + str(activeElimCount[0]))
+	print("ELIMINATED: " + str(activeElimCount[1]))
 	for agency: AgencyModel in %Organization.model.agencies:
 		var agencyColorName: String = AgencyModel.AgencyColor.keys()[AgencyModel.AgencyColor.values().find(agency.agencyColor)]
 		print(agencyColorName + ": " + str(agency.chromatics.size()))
@@ -46,11 +53,11 @@ func update_graphs() -> void:
 				graph.add_data(1, day, %Organization.model.activeMissions.size())
 				graph.add_data(2, day, %Organization.model.completedMissions.size())
 			Graph.GraphType.ACTIVE_ELIMINATED_CHROMATICS:
-				var activeCount: int = get_tree().get_nodes_in_group("ActiveChromatics").size()
-				var elimCount: int = get_tree().get_nodes_in_group("EliminatedChromatics").size()
-				graph.add_data(0, day, activeCount)
-				graph.add_data(1, day, elimCount)
-				graph.add_data(2, day, activeCount+elimCount)
+				var activeElimCount: Array[int] = %Organization.model.get_active_elim_count()
+				
+				graph.add_data(0, day, activeElimCount[0])
+				graph.add_data(1, day, activeElimCount[1])
+				graph.add_data(2, day, activeElimCount[0]+activeElimCount[1])
 			Graph.GraphType.MISSION_SIZES:
 				var sizeCount: Array = []
 				for i: int in range(6):
@@ -70,12 +77,15 @@ func update_graphs() -> void:
 					graph.add_data(countInd, day, rankCount[countInd])
 
 func simulation_loop() -> void:
-	while %Organization.model.day < simulationConfig["dayCount"]:
-		day_prints()
+	while %Organization.model.day < simulationConfig["dayCount"] or runningSimType == SimulationTypes.SimulationType.FIRST_TO_TEN:
+		#day_prints()
 		simulation_organization_day()
 		%Organization.model.hour = 0
 		%Organization.model.day += 1
 		update_graphs()
+		if runningSimType == SimulationTypes.SimulationType.FIRST_TO_TEN and %Organization.model.has_chromatic_of_rank(10):
+			maxDay = %Organization.model.day
+			return
 
 func simulation_organization_day() -> void:
 	%Organization.model.add_new_chromatic_progress()
@@ -174,6 +184,7 @@ func advance_active_missions() -> void:
 			chromatic.give_rest()
 		%Organization.model.activeMissions.erase(mission)
 		%Organization.model.completedMissions.append(mission)
+		#mission.get_parent().remove_child(mission)
 			
 
 func advance_all_resting_chromatic_status() -> void:
@@ -191,7 +202,7 @@ func give_chromatic_mission(chromatic: Chromatic) -> void:
 		create_assign_mission(chromatic)
 		return
 	
-	var missionList: Array = %Organization.get_node("Missions").get_children()
+	var missionList: Array = %Organization.model.upcomingMissions
 	var sizeSplitMissions: Array = mission_list_split(missionList, chromatic.model.classRank, chromatic.model.agency, true)
 	var maxSizeInd: int = RandomNumberGenerator.new().randi_range(-1, sizeSplitMissions.size()-1)
 	if maxSizeInd == -1:
@@ -227,4 +238,22 @@ func mission_list_split(missionList: Array, availableRank: int, ignoredColor: Ag
 	return sizeSplitMissions
 
 func _on_start_button_pressed() -> void:
-	start_simulation(SimulationTypes.SimulationType.DEFAULT)
+	start_simulation(SimulationTypes.SimulationType.FIRST_TO_TEN)
+
+func update_chosen_day(newDay: int) -> void:
+	chosenDay = clamp(newDay, minDay, maxDay)
+	%DayText.text = str(chosenDay)
+	%DaySlider.value = chosenDay
+	%DaySlider.min_value = minDay
+	%DaySlider.max_value = maxDay
+	%Graphs.update_visible_graph()
+	
+
+func _on_day_slider_value_changed(value: float) -> void:
+	var newChosenInt: int = int(value)
+	update_chosen_day(newChosenInt)
+
+
+func _on_text_edit_text_submitted(new_text: String) -> void:
+	var newTextInt: int = int(new_text)
+	update_chosen_day(newTextInt)

@@ -9,6 +9,9 @@ func _ready() -> void:
 	for graph: Graph in baseGraphs:
 		graphs.append(graph)
 
+func update_visible_graph() -> void:
+	get_child(visibleGraphInd).queue_redraw()
+
 func update_graph_visibility(newInd: int) -> void:
 	var graphCount: int = get_children().size()
 	if newInd >= graphCount:
@@ -18,6 +21,8 @@ func update_graph_visibility(newInd: int) -> void:
 	get_child(visibleGraphInd).hide()
 	get_child(newInd).show()
 	visibleGraphInd = newInd
+	
+	update_visible_graph()
 
 
 func _on_left_pressed() -> void:

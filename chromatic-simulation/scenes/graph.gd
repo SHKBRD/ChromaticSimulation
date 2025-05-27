@@ -30,6 +30,10 @@ var linePlots: Array[LinePlot]
 @export var height: float = 200
 @export var baseTickMarkLength: float = 30
 
+var seenDay: int = 0
+
+var barGraphPosition: Vector2 = Vector2(width+400, 0)
+
 var graphScale: Dictionary = {
 	"minX" : 0,
 	"minY" : 0,
@@ -95,7 +99,7 @@ func init_graph(type: GraphType) -> void:
 				var newLinePlot = LinePlot.make_line_plot(color, str(missionCount))
 				linePlots.append(newLinePlot)
 		GraphType.POPULATION_BY_RANK:
-			var maxRank: int = 9
+			var maxRank: int = 10
 			for rankCount: int in range(1, maxRank+1):
 				var color: Color = Color(float(rankCount)/maxRank, float(rankCount)/maxRank, float(rankCount)/maxRank)
 				var newLinePlot = LinePlot.make_line_plot(color, str(rankCount))
@@ -133,13 +137,31 @@ func update_graph_scale() -> void:
 
 
 func _draw() -> void:
+	update_graph_scale()
+	draw_line_graph()
+	draw_bar_graph()
+	#draw_line(Vector2(4.0, 1.0), Vector2(4.0, 4.0), Color.GREEN, 2.0)
+	#draw_line(Vector2(7.5, 1.0), Vector2(7.5, 4.0), Color.GREEN, 3.0)
+
+func draw_line_graph() -> void:
 	draw_base()
 	for plot: LinePlot in linePlots:
 		draw_line_plot(plot)
 	draw_name()
 	draw_axes_elements()
-	#draw_line(Vector2(4.0, 1.0), Vector2(4.0, 4.0), Color.GREEN, 2.0)
-	#draw_line(Vector2(7.5, 1.0), Vector2(7.5, 4.0), Color.GREEN, 3.0)
+
+func draw_bar_graph() -> void:
+	seenDay = Simulation.chosenDay
+	var barWidth: float = (width/linePlots.size())/1.5
+	for plotInd: int in linePlots.size():
+		if linePlots[plotInd].yVals.size() == 0: continue
+		var chosenDayYValue: float = linePlots[plotInd].yVals[seenDay-1]
+		var barHeight: float = ((chosenDayYValue-graphScale.minY)*graphScale.scale.y)
+		draw_rect(Rect2(barGraphPosition+Vector2(barWidth*plotInd, height-barHeight), Vector2(barWidth, barHeight)), linePlots[plotInd].color, true)
+		draw_rect(Rect2(barGraphPosition+Vector2(barWidth*plotInd, height-barHeight), Vector2(barWidth, barHeight)), Color.BLACK, false, 3)
+		draw_string(ThemeDB.fallback_font, barGraphPosition+Vector2(barWidth*plotInd, (height-barHeight)-5), str(int(chosenDayYValue)), HORIZONTAL_ALIGNMENT_CENTER, barWidth)
+	draw_line(barGraphPosition+Vector2(0, height), barGraphPosition+Vector2(width/1.5, height), Color.BLACK, 5)
+	draw_string(ThemeDB.fallback_font, barGraphPosition+Vector2(-25, height), str(graphScale.minY), HORIZONTAL_ALIGNMENT_RIGHT)
 
 func draw_base() -> void:
 	draw_line(Vector2(0, 0), Vector2(0, height), Color(0.1, 0.1, 0.1), 5.0)
@@ -179,8 +201,12 @@ func draw_name() -> void:
 	draw_string(ThemeDB.fallback_font, Vector2(0, -17), graphTitles[type])
 
 func _process(_delta) -> void:
+	pass
+	#queue_redraw()
+
+func update_graph_draw() -> void:
 	queue_redraw()
 
 func add_data(linePlotInd: int, xVal: float, yVal: float) -> void:
 	linePlots[linePlotInd].add_to_plot(xVal, yVal)
-	update_graph_scale()
+	

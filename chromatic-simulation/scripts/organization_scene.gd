@@ -1,4 +1,5 @@
 extends Node2D
+class_name Organization
 
 var agencyScene: PackedScene = preload("res://scenes/agency.tscn")
 var missionScene: PackedScene = preload("res://scenes/mission.tscn")

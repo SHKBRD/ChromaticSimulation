@@ -58,3 +58,17 @@ func get_agency_adjacency_bonus(agency1: AgencyModel.AgencyColor, agency2: Agenc
 	var agencyPlacementBonus: float = 1 + pow(0.5, abs(agency1Ind - agency2Ind))
 	print(agencyPlacementBonus)
 	return agencyPlacementBonus
+
+func has_chromatic_of_rank(rank: int) -> bool:
+	for agency: AgencyModel in agencies:
+		for chromatic: ChromaticModel in agency.chromatics:
+			if chromatic.classRank == rank: return true
+	return false
+
+func get_active_elim_count() -> Array[int]:
+	var activeCount: int = 0
+	var elimCount: int = 0
+	for agency: AgencyModel in agencies:
+		activeCount += agency.chromatics.size()
+		elimCount += agency.eliminatedChromatics.size()
+	return [activeCount, elimCount]
